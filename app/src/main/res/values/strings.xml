@@ -1,5 +1,15 @@
 <resources>
     <string name="app_name">Project-Intervention-Android</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="fileSearchButtonText">Selectionner un fichier</string>
+    <string name="InterventionName">Nom de l\'intervention</string>
+    <string name="sendButton">Envoyer</string>
+    <string name="popUpTitle">Information</string>
+    <string name="popUpBtn">OK</string>
+    <string name="popUpAsking">Êtes-vous sûr ?</string>
+    <string name="image_recycle_bin">ImageRecycleBin</string>
+    <string name="image_arrow_left">ImageArrowLeft</string>
+    <string name="image_viewer">ImageViewer</string>
+    <string name="image_cross">ImageCross</string>
+    <string name="image_arrow_right">ImageArrowRight</string>
+    <string name="image_number_number">0</string>
 </resources>

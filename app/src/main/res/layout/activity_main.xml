@@ -1,18 +1,168 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    android:orientation="vertical"
+    android:id="@+id/layout"
+    >
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        app:layout_constraintTop_toTopOf="@id/layout"
+        app:layout_constraintBottom_toTopOf="@id/ImageViewer"
+        app:layout_constraintRight_toRightOf="@id/layout"
+        app:layout_constraintLeft_toLeftOf="@id/layout"
+
+        android:id="@+id/InterventionName"
+
+        android:hint="@string/InterventionName"
+        android:autofillHints="name"
+        android:inputType="text"
+    />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        app:layout_constraintTop_toBottomOf="@id/InterventionName"
+        app:layout_constraintBottom_toTopOf="@id/FileSearch"
+        app:layout_constraintRight_toRightOf="@id/layout"
+        app:layout_constraintLeft_toLeftOf="@id/layout"
+
+        android:id="@+id/ImageViewer"
+
+        android:maxHeight="300dp"
+        android:maxWidth="150dp"
+        android:contentDescription="@string/image_viewer"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        app:layout_constraintTop_toBottomOf="@id/InterventionName"
+        app:layout_constraintBottom_toTopOf="@id/ImageArrowRight"
+        app:layout_constraintRight_toRightOf="@id/layout"
+        app:layout_constraintLeft_toRightOf="@id/ImageViewer"
+
+        android:id="@+id/ImageNumber"
+
+        android:text="@string/image_number_number"
+        android:textSize="50sp"
+        />
+
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        app:layout_constraintTop_toBottomOf="@id/ImageArrowRight"
+        app:layout_constraintBottom_toTopOf="@id/FileSearch"
+        app:layout_constraintRight_toRightOf="@id/layout"
+        app:layout_constraintLeft_toRightOf="@id/ImageViewer"
+
+        android:id="@+id/ImageCross"
+
+        android:visibility="invisible"
+        android:src="@drawable/red_cross"
+        android:contentDescription="@string/image_cross"
+        />
+
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        app:layout_constraintTop_toBottomOf="@id/ImageNumber"
+        app:layout_constraintBottom_toTopOf="@id/ImageCross"
+        app:layout_constraintRight_toRightOf="@id/layout"
+        app:layout_constraintLeft_toRightOf="@id/ImageViewer"
+
+        android:id="@+id/ImageArrowRight"
+
+        android:visibility="invisible"
+        android:src="@drawable/arrow_right"
+        android:contentDescription="@string/image_arrow_right"
+        />
+
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        app:layout_constraintTop_toBottomOf="@id/ImageNumber"
+        app:layout_constraintBottom_toTopOf="@id/ImageCross"
+        app:layout_constraintRight_toLeftOf="@id/ImageViewer"
+        app:layout_constraintLeft_toLeftOf="@id/layout"
+
+        android:id="@+id/ImageArrowLeft"
+
+        android:visibility="invisible"
+        android:src="@drawable/arrow_left"
+        android:contentDescription="@string/image_arrow_left"
+        />
+
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        app:layout_constraintTop_toBottomOf="@id/InterventionName"
+        app:layout_constraintBottom_toTopOf="@id/ImageArrowLeft"
+        app:layout_constraintRight_toLeftOf="@id/ImageViewer"
+        app:layout_constraintLeft_toLeftOf="@id/layout"
+
+        android:id="@+id/ImageRecycleBin"
+
+        android:visibility="invisible"
+        android:src="@drawable/recycle_bin"
+        android:contentDescription="@string/image_recycle_bin"
+        />
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        >
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
 
+        app:layout_constraintTop_toBottomOf="@id/ImageViewer"
+        app:layout_constraintBottom_toTopOf="@id/SendButton"
+        app:layout_constraintRight_toRightOf="@id/layout"
+        app:layout_constraintLeft_toLeftOf="@id/layout"
 
+        android:id="@+id/FileSearch">
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:id="@+id/FileSearchButton"
+
+            android:layout_gravity="center"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:id="@+id/FileSearchText"
+
+            android:layout_gravity="center"
+            />
 
     </LinearLayout>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        app:layout_constraintBottom_toBottomOf="@id/layout"
+        app:layout_constraintRight_toRightOf="@id/layout"
+        app:layout_constraintLeft_toLeftOf="@id/layout"
+
+        android:layout_marginBottom="15dp"
+
+        android:id="@+id/SendButton"
+    />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
