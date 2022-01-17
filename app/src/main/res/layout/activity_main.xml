@@ -23,6 +23,8 @@
         android:hint="@string/InterventionName"
         android:autofillHints="name"
         android:inputType="text"
+        android:padding="8dp"
+        android:background="@drawable/rectangle"
     />
 
     <ImageView
@@ -30,7 +32,7 @@
         android:layout_height="wrap_content"
 
         app:layout_constraintTop_toBottomOf="@id/InterventionName"
-        app:layout_constraintBottom_toTopOf="@id/FileSearch"
+        app:layout_constraintBottom_toTopOf="@id/FileSearchButton"
         app:layout_constraintRight_toRightOf="@id/layout"
         app:layout_constraintLeft_toLeftOf="@id/layout"
 
@@ -54,6 +56,8 @@
 
         android:text="@string/image_number_number"
         android:textSize="50sp"
+        android:padding="8dp"
+        android:background="@drawable/rectangle"
         />
 
     <ImageButton
@@ -61,13 +65,14 @@
         android:layout_height="wrap_content"
 
         app:layout_constraintTop_toBottomOf="@id/ImageArrowRight"
-        app:layout_constraintBottom_toTopOf="@id/FileSearch"
+        app:layout_constraintBottom_toTopOf="@id/FileSearchButton"
         app:layout_constraintRight_toRightOf="@id/layout"
         app:layout_constraintLeft_toRightOf="@id/ImageViewer"
 
         android:id="@+id/ImageCross"
 
         android:visibility="invisible"
+        android:background="?android:selectableItemBackground"
         android:src="@drawable/red_cross"
         android:contentDescription="@string/image_cross"
         />
@@ -83,7 +88,9 @@
 
         android:id="@+id/ImageArrowRight"
 
+
         android:visibility="invisible"
+        android:background="@android:color/transparent"
         android:src="@drawable/arrow_right"
         android:contentDescription="@string/image_arrow_right"
         />
@@ -99,7 +106,9 @@
 
         android:id="@+id/ImageArrowLeft"
 
+
         android:visibility="invisible"
+        android:background="@android:color/transparent"
         android:src="@drawable/arrow_left"
         android:contentDescription="@string/image_arrow_left"
         />
@@ -116,53 +125,76 @@
         android:id="@+id/ImageRecycleBin"
 
         android:visibility="invisible"
+        android:background="?android:selectableItemBackground"
         android:src="@drawable/recycle_bin"
         android:contentDescription="@string/image_recycle_bin"
         />
 
-    <LinearLayout
+    <ImageButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
 
-        app:layout_constraintTop_toBottomOf="@id/ImageViewer"
-        app:layout_constraintBottom_toTopOf="@id/SendButton"
-        app:layout_constraintRight_toRightOf="@id/layout"
+        app:layout_constraintTop_toBottomOf="@id/ImageArrowLeft"
+        app:layout_constraintBottom_toTopOf="@id/FileSearchButton"
+        app:layout_constraintRight_toLeftOf="@id/ImageViewer"
         app:layout_constraintLeft_toLeftOf="@id/layout"
 
-        android:id="@+id/FileSearch">
+        android:id="@+id/cameraButton"
+
+        android:background="?android:selectableItemBackground"
+        android:src="@drawable/camera"
+        android:contentDescription="@string/camera_button"
+        />
 
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
 
+            app:layout_constraintTop_toBottomOf="@id/ImageViewer"
+            app:layout_constraintBottom_toTopOf="@id/Send"
+            app:layout_constraintRight_toRightOf="@id/layout"
+            app:layout_constraintLeft_toLeftOf="@id/layout"
+
             android:id="@+id/FileSearchButton"
-
-            android:layout_gravity="center"
             />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-
-            android:id="@+id/FileSearchText"
-
-            android:layout_gravity="center"
-            />
-
-    </LinearLayout>
-
-    <Button
-        android:layout_width="wrap_content"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:id="@+id/Send"
 
         app:layout_constraintBottom_toBottomOf="@id/layout"
         app:layout_constraintRight_toRightOf="@id/layout"
         app:layout_constraintLeft_toLeftOf="@id/layout"
+        >
 
-        android:layout_marginBottom="15dp"
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
 
-        android:id="@+id/SendButton"
-    />
+            app:layout_constraintTop_toTopOf="@+id/Send"
+            app:layout_constraintBottom_toBottomOf="@id/Send"
+            app:layout_constraintRight_toLeftOf="@id/SendWithoutTest"
+            app:layout_constraintLeft_toLeftOf="@id/Send"
+
+            android:id="@+id/SendButton"
+            android:layout_marginBottom="15dp"
+            />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            app:layout_constraintTop_toTopOf="@+id/Send"
+            app:layout_constraintBottom_toBottomOf="@id/Send"
+            app:layout_constraintRight_toRightOf="@id/Send"
+            app:layout_constraintLeft_toRightOf="@id/SendButton"
+
+            android:id="@+id/SendWithoutTest"
+            android:layout_marginBottom="15dp"
+            />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

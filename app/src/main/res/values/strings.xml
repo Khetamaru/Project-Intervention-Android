@@ -1,8 +1,75 @@
 <resources>
+    <string name="n200">\nDetails : (200) -> Requête traitée avec succès.</string>
+
+    <string name="n400">\nDetails : (400) -> La syntaxe de la requête est erronée.</string>
+    <string name="n401">\nDetails : (401) -> Une authentification est nécessaire pour accéder à la ressource.</string>
+    <string name="n402">\nDetails : (402) -> Paiement requis pour accéder à la ressource.</string>
+    <string name="n403">\nDetails : (403) -> Le serveur a compris la requête, mais refuse de l\'exécuter. Contrairement à l\'erreur 401, s\'authentifier ne fera aucune différence. Sur les serveurs où l\'authentification est requise, cela signifie généralement que l\'authentification a été acceptée mais que les droits d\'accès ne permettent pas au client d\'accéder à la ressource.</string>
+    <string name="n404">\nDetails : (404) -> Ressource non trouvée.</string>
+    <string name="n405">\nDetails : (405) -> Méthode de requête non autorisée.</string>
+    <string name="n406">\nDetails : (406) -> La ressource demandée n\'est pas disponible dans un format qui respecterait les en-têtes « Accept » de la requête.</string>
+    <string name="n407">\nDetails : (407) -> Accès à la ressource autorisé par identification avec le proxy.</string>
+    <string name="n408">\nDetails : (408) -> Temps d’attente d’une requête du client, écoulé côté serveur. D\'après les spécifications HTTP : « Le client n\'a pas produit de requête dans le délai que le serveur était prêt à attendre. Le client PEUT répéter la demande sans modifications à tout moment ultérieur ».</string>
+    <string name="n409">\nDetails : (409) -> La requête ne peut être traitée en l’état actuel.</string>
+    <string name="n410">\nDetails : (410) -> La ressource n\'est plus disponible et aucune adresse de redirection n’est connue.</string>
+    <string name="n411">\nDetails : (411) -> La longueur de la requête n’a pas été précisée.</string>
+    <string name="n412">\nDetails : (412) -> Préconditions envoyées par la requête non vérifiées.</string>
+    <string name="n413">\nDetails : (413) -> Traitement abandonné dû à une requête trop importante.</string>
+    <string name="n414">\nDetails : (414) -> URI trop longue.</string>
+    <string name="n415">\nDetails : (415) -> Format de requête non supporté pour une méthode et une ressource données.</string>
+    <string name="n416">\nDetails : (416) -> Champs d’en-tête de requête « range » incorrect.</string>
+    <string name="n417">\nDetails : (417) -> Comportement attendu et défini dans l’en-tête de la requête insatisfaisante.</string>
+    <string name="n418">\nDetails : (418) -> « Je suis une théière » : Ce code est défini dans la RFC 2324 datée du 1er avril 1998, Hyper Text Coffee Pot Control Protocol.</string>
+    <string name="n421">\nDetails : (421) -> La requête a été envoyée à un serveur qui n\'est pas capable de produire une réponse (par exemple, car une connexion a été réutilisée).</string>
+    <string name="n422">\nDetails : (422) -> WebDAV : L’entité fournie avec la requête est incompréhensible ou incomplète.</string>
+    <string name="n423">\nDetails : (423) -> WebDAV : L’opération ne peut avoir lieu car la ressource est verrouillée.</string>
+    <string name="n424">\nDetails : (424) -> WebDAV : Une méthode de la transaction a échoué.</string>
+    <string name="n425">\nDetails : (425) -> RFC 8470 : le serveur ne peut traiter la demande car elle risque d\'être rejouée.</string>
+    <string name="n426">\nDetails : (426) -> RFC 2817 : Le client devrait changer de protocole, par exemple au profit de TLS/1.0.</string>
+    <string name="n428">\nDetails : (428) -> RFC 6585 : La requête doit être conditionnelle.</string>
+    <string name="n429">\nDetails : (429) -> RFC 6585 : le client a émis trop de requêtes dans un délai donné.</string>
+    <string name="n431">\nDetails : (431) -> RFC 6585 : Les entêtes HTTP émises dépassent la taille maximale admise par le serveur.</string>
+    <string name="n444">\nDetails : (444) -> Indique que le serveur n\'a retourné aucune information vers le client et a fermé la connexion. Visible seulement dans les journaux du serveur Nginx.</string>
+    <string name="n449">\nDetails : (449) -> Code défini par Microsoft. La requête devrait être renvoyée après avoir effectué une action.</string>
+    <string name="n450">\nDetails : (450) -> Code défini par Microsoft. Cette erreur est produite lorsque les outils de contrôle parental de Windows sont activés et bloquent l’accès à la page.</string>
+    <string name="n451">\nDetails : (451) -> Ce code d\'erreur indique que la ressource demandée est inaccessible pour des raisons d\'ordre légal.</string>
+    <string name="n456">\nDetails : (456) -> WebDAV : Erreur irrécupérable.</string>
+    <string name="n495">\nDetails : (495) -> Une extension de l\'erreur 400 Bad Request, utilisée lorsque le client a fourni un certificat invalide.</string>
+    <string name="n496">\nDetails : (496) -> Une extension de l\'erreur 400 Bad Request, utilisée lorsqu\'un certificat client requis n\'est pas fourni.</string>
+    <string name="n497">\nDetails : (497) -> Une extension de l\'erreur 400 Bad Request, utilisée lorsque le client envoie une requête HTTP vers le port 443 normalement destiné aux requêtes HTTPS.</string>
+    <string name="n498">\nDetails : (498) -> Le jeton a expiré ou est invalide.</string>
+    <string name="n499">\nDetails : (499) -> Le client a fermé la connexion avant de recevoir la réponse. Cette erreur se produit quand le traitement est trop long côté serveur17.</string>
+
+    <string name="n500">\nDetails : (500) -> Erreur interne du serveur.</string>
+    <string name="n501">\nDetails : (501) -> Fonctionnalité réclamée non supportée par le serveur.</string>
+    <string name="n502">\nDetails : (502) -> En agissant en tant que serveur proxy ou passerelle, le serveur a reçu une réponse invalide depuis le serveur distant.</string>
+    <string name="n503">\nDetails : (503) -> Service temporairement indisponible ou en maintenance.</string>
+    <string name="n504">\nDetails : (504) -> Temps d’attente d’une réponse d’un serveur à un serveur intermédiaire écoulé.</string>
+    <string name="n505">\nDetails : (505) -> Version HTTP non gérée par le serveur.</string>
+    <string name="n506">\nDetails : (506) -> RFC 2295 : Erreur de négociation. Transparent content negociation.</string>
+    <string name="n507">\nDetails : (507) -> WebDAV : Espace insuffisant pour modifier les propriétés ou construire la collection.</string>
+    <string name="n508">\nDetails : (508) -> WebDAV : Boucle dans une mise en relation de ressources (RFC 5842).</string>
+    <string name="n509">\nDetails : (509) -> Utilisé par de nombreux serveurs pour indiquer un dépassement de quota.</string>
+    <string name="n510">\nDetails : (510) -> RFC 2774 : La requête ne respecte pas la politique d\'accès aux ressources HTTP étendues.</string>
+    <string name="n511">\nDetails : (511) -> RFC 6585 : Le client doit s\'authentifier pour accéder au réseau. Utilisé par les portails captifs pour rediriger les clients vers la page d\'authentification.</string>
+    <string name="n520">\nDetails : (520) -> L\'erreur 520 est utilisé en tant que réponse générique lorsque le serveur d\'origine retourne un résultat imprévu.</string>
+    <string name="n521">\nDetails : (521) -> Le serveur a refusé la connexion depuis Cloudflare.</string>
+    <string name="n522">\nDetails : (522) -> Cloudflare n\'a pas pu négocier un TCP handshake avec le serveur d\'origine.</string>
+    <string name="n523">\nDetails : (523) -> Cloudflare n\'a pas réussi à joindre le serveur d\'origine. Cela peut se produire en cas d\'échec de résolution de nom de serveur DNS.</string>
+    <string name="n524">\nDetails : (524) -> Cloudflare a établi une connexion TCP avec le serveur d\'origine mais n\'a pas reçu de réponse HTTP avant l\'expiration du délai de connexion.</string>
+    <string name="n525">\nDetails : (525) -> Cloudflare n\'a pas pu négocier un SSL/TLS handshake avec le serveur d\'origine.</string>
+    <string name="n526">\nDetails : (526) -> Cloudflare n\'a pas pu valider le certificat SSL présenté par le serveur d\'origine.</string>
+    <string name="n527">\nDetails : (527) -> L\'erreur 527 indique que la requête a dépassé le délai de connexion ou a échoué après que la connexion WAN a été établie.</string>
+
+    <string name="n900">\nDetails : (900) -> Utilisateur Stupide.</string>
+    <string name="n901">\nDetails : (901) -> Programmeur Stupide.</string>
+
+
     <string name="app_name">Project-Intervention-Android</string>
     <string name="fileSearchButtonText">Selectionner un fichier</string>
     <string name="InterventionName">Nom de l\'intervention</string>
     <string name="sendButton">Envoyer</string>
+    <string name="sendWithoutTest">Envoyer sans tester</string>
     <string name="popUpTitle">Information</string>
     <string name="popUpBtn">OK</string>
     <string name="popUpAsking">Êtes-vous sûr ?</string>
@@ -12,4 +79,18 @@
     <string name="image_cross">ImageCross</string>
     <string name="image_arrow_right">ImageArrowRight</string>
     <string name="image_number_number">0</string>
+    <string name="testButtonText">Boutton de Test</string>
+    <string name="noImageError">Minute papillon ! Il me faut une image à envoyer !</string>
+    <string name="noInterNameError">Tu pousse le bouchon Maurice ! Tu passe pas sans indiquer le nom de l\'intervention voyons !</string>
+    <string name="remember_check_box">Se souvenir de moi.</string>
+    <string name="userId">Identifiant</string>
+    <string name="userPassword">Mot De Passe</string>
+    <string name="connexionButton">Se connecter</string>
+    <string name="userIdError">Le champ de texte "Identifiant" est vide !</string>
+    <string name="userPasswordError">Le champ de texte "Mot De Passe" est vide !</string>
+    <string name="userConnexionError">L\'Identifiant et/ou le Mot De Passe est incorrecte.</string>
+    <string name="multipleExemplarImageError">Cette image est déjà sélectionnée dans les photos à envoyer.</string>
+    <string name="noServerFind">Serveur introuvable</string>
+    <string name="gear">abcdefghijklmnopqrstuvwxyz</string>
+    <string name="camera_button">Button to take a photo himself</string>
 </resources>
