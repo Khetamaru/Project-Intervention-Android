@@ -1,33 +1,36 @@
 package com.example.project_intervention_android
 
-import objects.AsyncFactory
-import objects.RequestFactory
-import objects.ToSendFile
 import android.app.Activity
 import android.app.AlertDialog
 import android.content.DialogInterface
 import android.content.Intent
-import android.graphics.Bitmap
 import android.net.Uri
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.provider.MediaStore
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
-import kotlinx.coroutines.*
+import androidx.appcompat.app.AppCompatActivity
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import objects.AsyncFactory
+import objects.POJOFactory
+import objects.RequestFactory
+import objects.ToSendFile
 import popUps.MessagePopUp
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), LoadingImplementation {
 
     // Global variables
     private var pictureSearchActivityResult : ActivityResultLauncher<Intent>? = null
-    private var pictureTakeActivityResult : ActivityResultLauncher<Intent>? = null
     private var toSendFile : ToSendFile? = null
 
+    private var fileSearchButton : Button? = null
+    private var sendButton : Button? = null
     private var interNameText : EditText? = null
+    private var userFolderText : EditText? = null
     private var imageViewer : ImageView? = null
     private var imageNumber : TextView? = null
     private var imageCross : ImageButton? = null
@@ -38,53 +41,38 @@ class MainActivity : AppCompatActivity() {
     private val job =  SupervisorJob()
     private val asyncFactory = AsyncFactory()
     private val requestFactory = RequestFactory()
+    private var pojoFactory : POJOFactory? = null
+    private var loadingAnimation: LoadingAnimation? = null
+    private var loadingAsync: LoadingAsync? = null
 
     private val ioScope by lazy { CoroutineScope(job + Dispatchers.IO) }
+
+    override fun onFinishedLoading() {
+        //# After loading is done, stop the animation and reset the current view
+        loadingAnimation!!.stopAnimation(R.layout.activity_main)
+        setUp()
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // Link Layout
-        setContentView(R.layout.activity_main)
-
-        // Link Layout's variables
-        val fileSearchButton : Button = findViewById(R.id.FileSearchButton)
-        val sendButton : Button = findViewById(R.id.SendButton)
-        val sendWithoutTest : Button = findViewById(R.id.SendWithoutTest)
-        val cameraButton : ImageButton = findViewById(R.id.cameraButton)
-        interNameText = findViewById(R.id.InterventionName)
-        imageViewer = findViewById(R.id.ImageViewer)
-        imageNumber = findViewById(R.id.ImageNumber)
-        imageCross = findViewById(R.id.ImageCross)
-        imageArrowRight = findViewById(R.id.ImageArrowRight)
-        imageArrowLeft = findViewById(R.id.ImageArrowLeft)
-        imageRecycleBin = findViewById(R.id.ImageRecycleBin)
-
-        // Other Variable
-        toSendFile = ToSendFile(
-            intent.getStringExtra("userId").toString(),
-            intent.getStringExtra("userPassword").toString()
-        )
-
-        // Change Layout
-        fileSearchButton.text = getString(R.string.fileSearchButtonText)
-        sendButton.text = getString(R.string.sendButton)
-        sendWithoutTest.text = getString(R.string.sendWithoutTest)
-
-        val params: ViewGroup.LayoutParams = imageViewer!!.layoutParams as ViewGroup.LayoutParams
-        params.width = 600
-        params.height = 1200
-        imageViewer!!.layoutParams = params
+        setUp()
 
         // Set Up File Selection Activity
         pictureSearchActivityResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
             if (it.resultCode == Activity.RESULT_OK) {
 
                 val data = it.data
+                data!!.data?.let { it ->
+                    contentResolver.openOutputStream(it).use {
+
+                            stream -> stream!!.writer().write("Example Text")
+                    }
+                }
 
                 if (data!!.data != null) {
 
-                    val uri: Uri = data.data!!
+                    val uri = data.data!!
                     if (!redundancyCheck(uri)) {
 
                         toSendFile!!.filePaths.add(uri)
@@ -119,40 +107,65 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
+    }
 
-        pictureTakeActivityResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
-            if (it.resultCode == Activity.RESULT_OK) {
+    fun setUp() {
 
-                val image = Bitmap.createBitmap(it.data!!.extras!!.get("data") as Bitmap)
-                toSendFile!!.bitmapPictures.add(image)
+        // Link Layout
+        setContentView(R.layout.activity_main)
 
-                uiUpdate()
-            }
-        }
+        // Link Layout's variables
+        fileSearchButton = findViewById(R.id.FileSearchButton)
+        sendButton = findViewById(R.id.SendButton)
+        interNameText = findViewById(R.id.InterventionName)
+        userFolderText = findViewById(R.id.UserFolderName)
+        imageViewer = findViewById(R.id.ImageViewer)
+        imageNumber = findViewById(R.id.ImageNumber)
+        imageCross = findViewById(R.id.ImageCross)
+        imageArrowRight = findViewById(R.id.ImageArrowRight)
+        imageArrowLeft = findViewById(R.id.ImageArrowLeft)
+        imageRecycleBin = findViewById(R.id.ImageRecycleBin)
+
+        // Other Variable
+        toSendFile = ToSendFile(
+            intent.getStringExtra("userId").toString(),
+            intent.getStringExtra("userPassword").toString()
+        )
+        pojoFactory = POJOFactory(cacheDir.absolutePath + "/userInfo.json")
+        loadingAnimation = LoadingAnimation(this, "loadingAnimation.json")
+        loadingAsync = LoadingAsync(this)
+
+        // Change Layout
+        fileSearchButton!!.text = getString(R.string.fileSearchButtonText)
+        sendButton!!.text = getString(R.string.sendButton)
+
+        if (pojoFactory!!.doesJSONExist()) userFolderText!!.setText(pojoFactory!!.readJSONFromFile())
+
+        val params: ViewGroup.LayoutParams = imageViewer!!.layoutParams as ViewGroup.LayoutParams
+        params.width = 600
+        params.height = 1200
+        imageViewer!!.layoutParams = params
 
         // On Click Listeners
-        fileSearchButton.setOnClickListener {
+        fileSearchButton!!.setOnClickListener {
 
             // File Explorer Opening
-            val intent = Intent(Intent.ACTION_GET_CONTENT)
+            val intent = Intent(Intent.ACTION_PICK)
             intent.type = "image/*"
             intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
             pictureSearchActivityResult!!.launch(intent)
         }
 
-        cameraButton.setOnClickListener {
-
-            // Take picture directly with phone camera
-            val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-            pictureTakeActivityResult!!.launch(intent)
-        }
-
-        sendButton.setOnClickListener {
+        sendButton!!.setOnClickListener {
 
             val error : String? = errorCheck()
             if (error == null) {
                 // Files Sending
                 toSendFile!!.interName = interNameText!!.text.toString()
+                toSendFile!!.userFolder = userFolderText!!.text.toString()
+
+                loadingAnimation!!.playAnimation(true)
+                loadingAsync!!.execute()
 
                 asyncFactory.execSynchronous(
                     ioScope,
@@ -165,18 +178,6 @@ class MainActivity : AppCompatActivity() {
                 intent.putExtra("pop up text", errorMessage(error))
                 startActivity(intent)
             }
-        }
-
-        sendWithoutTest.setOnClickListener {
-
-            // Files Sending
-            toSendFile!!.interName = interNameText!!.text.toString()
-
-            asyncFactory.execSynchronous(
-                ioScope,
-                ::sendButtonAsyncFun,
-                ::errorCatch
-            )
         }
 
         // Remove all images selected
@@ -205,18 +206,10 @@ class MainActivity : AppCompatActivity() {
         // Remove the actual viewed image
         imageCross!!.setOnClickListener {
 
-            if (toSendFile!!.isIndexBitmap()) {
+            toSendFile!!.removeFilePath(toSendFile!!.filePaths[toSendFile!!.index])
 
-                toSendFile!!.removeBitmapPicture(toSendFile!!.bitmapPictures[toSendFile!!.indexBitmap()])
-
-            } else {
-
-                toSendFile!!.removeFilePath(toSendFile!!.filePaths[toSendFile!!.index])
-            }
-
-            if (toSendFile!!.index > 0 && toSendFile!!.totalSize() > 0) { toSendFile!!.index-- }
+            if (toSendFile!!.index > 0 && toSendFile!!.filePaths.size > 0) { toSendFile!!.index-- }
             if (toSendFile!!.filePaths.size == 0) {  toSendFile!!.resetFilePaths() }
-            if (toSendFile!!.bitmapPictures.size == 0) { toSendFile!!.resetBitmapPictures() }
 
             uiUpdate()
         }
@@ -240,32 +233,24 @@ class MainActivity : AppCompatActivity() {
     private fun recycleBinFun() {
 
         toSendFile!!.resetFilePaths()
-        toSendFile!!.resetBitmapPictures()
         uiUpdate()
     }
 
     // Update the different UI buttons before one has been pressed
     private fun uiUpdate() {
 
-        imageNumber!!.text = (toSendFile!!.totalSize()).toString()
+        imageNumber!!.text = (toSendFile!!.filePaths.size).toString()
 
-        if((toSendFile!!.areArraysEmpty()) && toSendFile!!.index < toSendFile!!.totalSize()) {
+        if(toSendFile!!.index < toSendFile!!.filePaths.size) {
 
-            if (toSendFile!!.isIndexBitmap()) {
-
-                imageViewer!!.setImageBitmap(toSendFile!!.bitmapPictures[toSendFile!!.indexBitmap()])
-            }
-            else {
-
-                imageViewer!!.setImageURI(toSendFile!!.filePaths[toSendFile!!.index])
-            }
+            imageViewer!!.setImageURI(toSendFile!!.filePaths[toSendFile!!.index])
         }
         else {
             toSendFile!!.resetIndex()
             imageViewer!!.setImageURI(Uri.EMPTY)
         }
 
-        when (toSendFile!!.filePaths.size + toSendFile!!.bitmapPictures.size) {
+        when (toSendFile!!.filePaths.size) {
             0 -> {
                 imageArrowLeft!!.visibility = View.INVISIBLE
                 imageArrowRight!!.visibility = View.INVISIBLE
@@ -281,7 +266,7 @@ class MainActivity : AppCompatActivity() {
             } else -> {
                 when (toSendFile!!.index) {
 
-                    toSendFile!!.filePaths.size + toSendFile!!.bitmapPictures.size - 1 -> {
+                    toSendFile!!.filePaths.size - 1 -> {
                         imageArrowLeft!!.visibility = View.VISIBLE
                         imageArrowRight!!.visibility = View.INVISIBLE
 
@@ -305,13 +290,20 @@ class MainActivity : AppCompatActivity() {
 
         val text: java.lang.Exception? = requestSendingAsync()
 
-        if(text != null) errorCatch(text)
+        if(text != null) {
+            errorCatch(text.message!!)
+        }
+        else {
+            errorCatch("envoyé")
+        }
+
+        loadingAsync!!.stopAsync()
     }
 
     // Request launch
     private suspend fun requestSendingAsync(): java.lang.Exception? {
 
-        return requestFactory.launchRequest(this@MainActivity, toSendFile!!)
+        return requestFactory.launchRequest(this, toSendFile!!)
     }
 
     // Information Pop Up about Request response
@@ -323,27 +315,25 @@ class MainActivity : AppCompatActivity() {
     }
 
     // Information Pop Up about Request response
-    private fun errorCatch(e: Exception) {
+    private fun errorCatch(e: String) {
         // Show Error details
         val intent = Intent(this@MainActivity, MessagePopUp::class.java)
-        intent.putExtra("pop up text", errorMessage(e.message!!))
+        intent.putExtra("pop up text", errorMessage(e))
         startActivity(intent)
     }
 
     private fun errorCheck() : String? {
 
-        if (interNameText!!.text.toString() == String()) {
+        if (userFolderText!!.text.toString() == String()) return errorMessage(getString(R.string.noUserFolderError)) else pojoFactory!!.writeJSONToFile(userFolderText!!.text.toString())
 
-            return errorMessage(getString(R.string.noInterNameError))
-        }
-        if (toSendFile!!.filePaths.size + toSendFile!!.bitmapPictures.size == 0) {
+        if (interNameText!!.text.toString() == String())  return errorMessage(getString(R.string.noInterNameError))
 
-            return errorMessage(getString(R.string.noImageError))
-        }
-        if (toSendFile!!.filePaths.size < 0 || toSendFile!!.bitmapPictures.size < 0) {
+        if (userFolderText!!.text[0] == '/' || userFolderText!!.text[userFolderText!!.text.length - 1] == '/' || interNameText!!.text[0] == '/' || interNameText!!.text[interNameText!!.text.length - 1] == '/') return errorMessage(getString(R.string.errorSlash))
 
-            return errorNumber(901)
-        }
+        if (toSendFile!!.filePaths.size == 0) return errorMessage(getString(R.string.noImageError))
+
+        if (toSendFile!!.filePaths.size < 0) return errorNumber(901)
+
         return null
     }
 

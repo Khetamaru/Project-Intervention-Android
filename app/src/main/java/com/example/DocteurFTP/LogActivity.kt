@@ -1,15 +1,15 @@
 package com.example.project_intervention_android
 
 import android.content.Intent
-import android.content.res.Resources
 import android.os.Bundle
 import android.widget.Button
 import android.widget.CheckBox
 import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
-import objects.CesarCypher
-import objects.Login
-import objects.POJOFactory
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import objects.*
 import popUps.MessagePopUp
 
 class LogActivity : AppCompatActivity() {
@@ -20,8 +20,11 @@ class LogActivity : AppCompatActivity() {
     private var connexionButton : Button? = null
 
     private var pojoFactory : POJOFactory? = null
-    private var login : Login = Login()
-    private var cesarCypher : CesarCypher? = null
+    private var requestFactory = RequestFactory()
+    private var user : User = User()
+
+    private val job =  SupervisorJob()
+    private val ioScope by lazy { CoroutineScope(job + Dispatchers.IO) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,24 +40,15 @@ class LogActivity : AppCompatActivity() {
 
         // Other variables
         pojoFactory = POJOFactory(cacheDir.absolutePath + "/login.json")
-        cesarCypher = CesarCypher(getString(R.string.gear))
 
         checkRememberFile()
 
         connexionButton!!.setOnClickListener {
 
-            if (!errorCheck()) {
-
-                if (rememberCheckBox!!.isChecked) {
-
-                    rememberFileCreation()
-                }
-                else {
-
-                    rememberFileDelete()
-                }
-                logIn(userIdEditText!!.text.toString(), userPasswordEditText!!.text.toString())
-            }
+            AsyncFactory().execSynchronous(
+                ioScope,
+                ::checkConnexionIsOk,
+                ::errorCatch)
         }
     }
 
@@ -62,22 +56,21 @@ class LogActivity : AppCompatActivity() {
 
         if (pojoFactory!!.doesJSONExist()) {
 
-            login = pojoFactory!!.readJSONFromFile()
-            login.password = cesarCypher!!.decipher(login.password)
-            setLogs(login)
+            user = pojoFactory!!.readJSONFromFileLogin()
+            setLogs(user)
         }
     }
 
-    private fun setLogs(login: Login) {
+    private fun setLogs(user: User) {
 
-        userIdEditText!!.setText(login.id)
-        userPasswordEditText!!.setText(login.password)
+        userIdEditText!!.setText(user.id)
+        userPasswordEditText!!.setText(user.password)
         rememberCheckBox!!.isChecked = true
     }
 
     private fun rememberFileCreation() {
 
-        pojoFactory!!.writeJSONToFile(userIdEditText!!.text.toString(), cesarCypher!!.cypher(userPasswordEditText!!.text.toString()))
+        pojoFactory!!.writeJSONToFile(userIdEditText!!.text.toString(), userPasswordEditText!!.text.toString())
     }
 
     private fun rememberFileDelete() {
@@ -91,26 +84,45 @@ class LogActivity : AppCompatActivity() {
             userIdEditText!!.text.toString() == String() -> {
 
                 errorCatch(getString(R.string.userIdError))
-                return true
+                return false
             }
             userPasswordEditText!!.text.toString() == String() -> {
 
                 errorCatch(getString(R.string.userPasswordError))
-                return true
-            }
-            !checkConnexionIsOk() -> {
-
-                errorCatch(getString(R.string.userConnexionError))
-                return true
+                return false
             }
         }
-        return false
+        return true
     }
 
-    private fun checkConnexionIsOk() : Boolean {
+    private suspend fun checkConnexionIsOk() {
 
-        return true
-        TODO("Set up connection with server")
+        var error = requestFactory.ftpSetUp(
+            ToSendFile(
+                userIdEditText!!.text.toString(),
+                userPasswordEditText!!.text.toString()
+            )
+        )
+        if (error == null && errorCheck()) {
+
+            callBackFunc()
+        }
+        else {
+            errorCatch(error.toString())
+        }
+    }
+
+    private fun callBackFunc() {
+
+        if (rememberCheckBox!!.isChecked) {
+
+            rememberFileCreation()
+        }
+        else {
+
+            rememberFileDelete()
+        }
+        logIn(userIdEditText!!.text.toString(), userPasswordEditText!!.text.toString())
     }
 
     private fun errorCatch(text: String) {
