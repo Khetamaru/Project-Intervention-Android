@@ -13,7 +13,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.ProjectInterventionAndroid">
         <activity android:name="com.example.DocteurFTP.LogActivity"
-            android:exported="true">
+            android:exported="true"
+            android:screenOrientation="sensorPortrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -21,15 +22,18 @@
             </intent-filter>
         </activity>
         <activity android:name="com.example.DocteurFTP.MainActivity"
-            android:exported="true" >
+            android:exported="true"
+            android:screenOrientation="sensorPortrait">
         </activity>
         <activity
             android:name="popUps.MessagePopUp"
-            android:exported="false">
+            android:exported="false"
+            android:screenOrientation="sensorPortrait">
         </activity>
         <activity
             android:name="com.example.DocteurFTP.ConfigActivity"
-            android:exported="false">
+            android:exported="false"
+            android:screenOrientation="sensorPortrait">
         </activity>
     </application>
 </manifest>
