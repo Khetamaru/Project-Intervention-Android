@@ -1,4 +1,4 @@
-package com.example.project_intervention_android
+package com.example.DocteurFTP
 
 import android.content.Intent
 import android.os.Bundle
@@ -16,7 +16,6 @@ class LogActivity : AppCompatActivity() {
 
     private var userIdEditText : EditText? = null
     private var userPasswordEditText : EditText? = null
-    private var rememberCheckBox : CheckBox? = null
     private var connexionButton : Button? = null
 
     private var pojoFactory : POJOFactory? = null
@@ -35,11 +34,10 @@ class LogActivity : AppCompatActivity() {
         // Link Layout's variables
         userIdEditText = findViewById(R.id.userId)
         userPasswordEditText = findViewById(R.id.userPassword)
-        rememberCheckBox = findViewById(R.id.rememberCheckBox)
         connexionButton = findViewById(R.id.connexionButton)
 
         // Other variables
-        pojoFactory = POJOFactory(cacheDir.absolutePath + "/login.json")
+        pojoFactory = POJOFactory(cacheDir.absolutePath)
 
         checkRememberFile()
 
@@ -56,8 +54,12 @@ class LogActivity : AppCompatActivity() {
 
         if (pojoFactory!!.doesJSONExist()) {
 
-            user = pojoFactory!!.readJSONFromFileLogin()
+            user = pojoFactory!!.readJSONFromFile()
             setLogs(user)
+        }
+        else {
+
+            user = User()
         }
     }
 
@@ -65,17 +67,13 @@ class LogActivity : AppCompatActivity() {
 
         userIdEditText!!.setText(user.id)
         userPasswordEditText!!.setText(user.password)
-        rememberCheckBox!!.isChecked = true
     }
 
     private fun rememberFileCreation() {
 
-        pojoFactory!!.writeJSONToFile(userIdEditText!!.text.toString(), userPasswordEditText!!.text.toString())
-    }
-
-    private fun rememberFileDelete() {
-
-        pojoFactory!!.deleteJSON()
+        user.id = userIdEditText!!.text.toString()
+        user.password = userPasswordEditText!!.text.toString()
+        pojoFactory!!.writeJSONToFile(user)
     }
 
     private fun errorCheck() : Boolean {
@@ -97,11 +95,8 @@ class LogActivity : AppCompatActivity() {
 
     private suspend fun checkConnexionIsOk() {
 
-        var error = requestFactory.ftpSetUp(
-            ToSendFile(
-                userIdEditText!!.text.toString(),
-                userPasswordEditText!!.text.toString()
-            )
+        val error = requestFactory.ftpSetUp(
+            ToSendFile(user)
         )
         if (error == null && errorCheck()) {
 
@@ -114,15 +109,8 @@ class LogActivity : AppCompatActivity() {
 
     private fun callBackFunc() {
 
-        if (rememberCheckBox!!.isChecked) {
-
-            rememberFileCreation()
-        }
-        else {
-
-            rememberFileDelete()
-        }
-        logIn(userIdEditText!!.text.toString(), userPasswordEditText!!.text.toString())
+        rememberFileCreation()
+        logIn()
     }
 
     private fun errorCatch(text: String) {
@@ -132,11 +120,9 @@ class LogActivity : AppCompatActivity() {
         startActivity(intent)
     }
 
-    private fun logIn(id : String, password : String) {
+    private fun logIn() {
 
         val intent = Intent(this@LogActivity, MainActivity::class.java)
-        intent.putExtra("userId", id)
-        intent.putExtra("userPassword", password)
         startActivity(intent)
         finish()
     }

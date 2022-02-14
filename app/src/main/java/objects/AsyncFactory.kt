@@ -8,7 +8,7 @@ import kotlin.reflect.KSuspendFunction0
 
 class AsyncFactory : AppCompatActivity() {
 
-    fun execSynchronous(scope: CoroutineScope, coroutine: KSuspendFunction0<Unit>, errorCatch: KFunction1<Exception, Unit>) {
+    fun execSynchronous(scope: CoroutineScope, coroutine: KSuspendFunction0<Unit>, errorCatch: KFunction1<String, Unit>) {
 
         // Coroutine Start
         scope.launch {
@@ -18,7 +18,7 @@ class AsyncFactory : AppCompatActivity() {
             }
             catch (e: Exception) {
                 // Show Error details
-                errorCatch(e)
+                errorCatch(e.toString())
             }
         }
     }

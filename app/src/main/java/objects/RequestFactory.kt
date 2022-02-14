@@ -1,57 +1,60 @@
 package objects
 
 import android.content.Context
+import android.graphics.Bitmap
+import android.util.Base64
+import com.google.common.base.Utf8
 import org.apache.commons.net.ftp.FTP
 import org.apache.commons.net.ftp.FTPClient
 import java.io.*
-import android.graphics.Bitmap
-import androidx.documentfile.provider.DocumentFile
-import java.io.File
-import android.util.Base64
-import java.io.ByteArrayOutputStream
+import java.net.InetAddress
+import java.util.*
 
 
 class RequestFactory {
 
-    private var ftpClient : FTPClient? = null
+    private var ftpClient = FTPClient()
 
     suspend fun launchRequest(context: Context, toSendFile: ToSendFile): Exception? {
 
         try {
 
-            val (isConnect, connectException) = ftpSetUp(toSendFile)
+            val connectException = ftpSetUp(toSendFile)
 
-            var sourceFile: DocumentFile
+            var sourceFile: File
             var input: InputStream?
+
+            ftpClient.sendCommand("OPTS UTF8","ON")
+
+            ftpClient.changeWorkingDirectory("/dossier partage techs")
+
+            toSendFile.userFolder.split("/").forEach {
+                folder ->
+                    ftpClient.makeDirectory(folder)
+                    ftpClient.changeWorkingDirectory(folder)
+            }
+
+            toSendFile.interName.split("/").forEach {
+                inter ->
+                    ftpClient.makeDirectory(inter)
+                    ftpClient.changeWorkingDirectory(inter)
+            }
 
             for (uri in toSendFile.filePaths) {
 
-                sourceFile = DocumentFile.fromSingleUri(context, uri)!!
+                sourceFile = File(FileUtils(context).getPath(uri)!!)
 
                 if (sourceFile.exists()) {
 
-                    input = context.contentResolver.openInputStream(uri)
-                    ftpClient!!.storeFile(toSendFile.interName, input)
-                    input!!.close()
-                }
-            }
-
-            for (bitmap in toSendFile.bitmapPictures) {
-
-                val file = File(bitMapToString(bitmap)!!)
-
-                if (file.exists()) {
-
-                    input = FileInputStream(file)
-                    ftpClient!!.storeFile(toSendFile.interName, input)
+                    input = FileInputStream(sourceFile)
+                    ftpClient.storeFile(sourceFile.name, input)
                     input.close()
-
                 }
             }
-            ftpClient!!.logout()
-            ftpClient!!.disconnect()
+            ftpClient.logout()
+            ftpClient.disconnect()
 
-            if (!isConnect) {
+            if (connectException != null) {
 
                 return connectException
             }
@@ -62,22 +65,22 @@ class RequestFactory {
         return null
     }
 
-    private fun ftpSetUp(toSendFile: ToSendFile): Pair<Boolean, Exception?> {
-
-        ftpClient = FTPClient()
-        var bool = false
+    fun ftpSetUp(toSendFile: ToSendFile): Exception? {
 
         try {
-
-            ftpClient!!.connect(toSendFile.server, toSendFile.port)
-            bool = ftpClient!!.login(toSendFile.user, toSendFile.pass)
-            ftpClient!!.setFileType(FTP.BINARY_FILE_TYPE)
+            ftpClient.connect(InetAddress.getByName(toSendFile.server), toSendFile.port)
+            ftpClient.enterLocalPassiveMode()
+            if (!ftpClient.login(toSendFile.user.id, toSendFile.user.password)) {
+                throw IllegalStateException(
+                    "Login failed. The response from the server is: " +
+                            ftpClient.replyString
+                )
+            }
+            ftpClient.setFileType(FTP.BINARY_FILE_TYPE)
+        } catch (e: Exception) {
+            return e
         }
-        catch (e: Exception)
-        {
-            return Pair(bool, e)
-        }
-        return Pair(bool, null)
+        return null
     }
 
     private fun bitMapToString(bitmap: Bitmap): String? {

@@ -13,7 +13,7 @@ import androidx.appcompat.widget.AppCompatTextView
 import androidx.cardview.widget.CardView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.graphics.ColorUtils
-import com.example.project_intervention_android.R
+import com.example.DocteurFTP.R
 
 class MessagePopUp : AppCompatActivity() {
 

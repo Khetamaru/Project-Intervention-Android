@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+
+    android:id="@+id/parent">
+
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        app:layout_constraintTop_toTopOf="@id/parent"
+        app:layout_constraintLeft_toLeftOf="@id/parent"
+        app:layout_constraintRight_toRightOf="@id/parent"
+
+        android:id="@+id/listViewShortcut"
+        />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        app:layout_constraintTop_toBottomOf="@id/listViewShortcut"
+        app:layout_constraintBottom_toTopOf="@id/filePathConfigLayout"
+        app:layout_constraintLeft_toLeftOf="@id/parent"
+        app:layout_constraintRight_toRightOf="@id/parent"
+
+        android:id="@+id/shortcutLayout"
+
+        android:orientation="horizontal"
+        >
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:id="@+id/saveShortcutButton"
+
+            android:background="?android:selectableItemBackground"
+            android:src="@drawable/save_icon"
+            />
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:padding="8dp"
+            android:background="@drawable/rectangle"
+            android:hint="@string/newShortcutTextHint"
+
+            android:id="@+id/shortcutText"
+            />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        app:layout_constraintTop_toBottomOf="@id/shortcutLayout"
+        app:layout_constraintBottom_toBottomOf="@id/parent"
+        app:layout_constraintLeft_toLeftOf="@id/parent"
+        app:layout_constraintRight_toRightOf="@id/parent"
+
+        android:id="@+id/filePathConfigLayout"
+
+        android:orientation="horizontal"
+        >
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                android:id="@+id/saveFilePathButton"
+
+                android:background="?android:selectableItemBackground"
+                android:src="@drawable/save_icon"
+                />
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                android:padding="8dp"
+                android:background="@drawable/rectangle"
+                android:hint="@string/filePathTextHint"
+
+                android:id="@+id/filePathText"
+                />
+    </LinearLayout>
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

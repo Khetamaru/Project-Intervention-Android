@@ -9,29 +9,77 @@
     android:id="@+id/layout"
     >
 
-    <EditText
-        android:layout_width="wrap_content"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
 
         app:layout_constraintTop_toTopOf="@id/layout"
-        app:layout_constraintBottom_toTopOf="@id/ImageViewer"
         app:layout_constraintRight_toRightOf="@id/layout"
         app:layout_constraintLeft_toLeftOf="@id/layout"
 
-        android:id="@+id/InterventionName"
+        android:id="@+id/TextLayout"
 
-        android:hint="@string/InterventionName"
-        android:autofillHints="name"
-        android:inputType="text"
-        android:padding="8dp"
-        android:background="@drawable/rectangle"
-    />
+        android:layout_marginTop="15dp"
+        >
+
+        <Spinner
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            app:layout_constraintTop_toTopOf="@+id/TextLayout"
+            app:layout_constraintBottom_toTopOf="@id/InterventionName"
+            app:layout_constraintRight_toLeftOf="@id/configMenuButton"
+            app:layout_constraintLeft_toLeftOf="@id/TextLayout"
+
+            android:id="@+id/UserFolderName"
+
+            android:hint="@string/UserFolderName"
+            android:autofillHints="name"
+            android:padding="8dp"
+            android:background="@drawable/rectangle"
+            android:layout_marginTop="15dp"
+            />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            app:layout_constraintTop_toTopOf="@+id/TextLayout"
+            app:layout_constraintBottom_toTopOf="@id/InterventionName"
+            app:layout_constraintRight_toRightOf="@id/TextLayout"
+            app:layout_constraintLeft_toRightOf="@id/UserFolderName"
+
+            android:id="@+id/configMenuButton"
+
+            android:text="Config"
+            />
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            app:layout_constraintTop_toBottomOf="@+id/UserFolderName"
+            app:layout_constraintBottom_toBottomOf="@id/TextLayout"
+            app:layout_constraintRight_toRightOf="@id/TextLayout"
+            app:layout_constraintLeft_toLeftOf="@id/TextLayout"
+
+            android:id="@+id/InterventionName"
+
+            android:hint="@string/InterventionName"
+            android:autofillHints="name"
+            android:inputType="text"
+            android:padding="8dp"
+            android:background="@drawable/rectangle"
+            android:layout_marginTop="15dp"
+            />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
 
-        app:layout_constraintTop_toBottomOf="@id/InterventionName"
+        app:layout_constraintTop_toBottomOf="@id/TextLayout"
         app:layout_constraintBottom_toTopOf="@id/FileSearchButton"
         app:layout_constraintRight_toRightOf="@id/layout"
         app:layout_constraintLeft_toLeftOf="@id/layout"
@@ -47,7 +95,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
 
-        app:layout_constraintTop_toBottomOf="@id/InterventionName"
+        app:layout_constraintTop_toBottomOf="@id/TextLayout"
         app:layout_constraintBottom_toTopOf="@id/ImageArrowRight"
         app:layout_constraintRight_toRightOf="@id/layout"
         app:layout_constraintLeft_toRightOf="@id/ImageViewer"
@@ -117,7 +165,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
 
-        app:layout_constraintTop_toBottomOf="@id/InterventionName"
+        app:layout_constraintTop_toBottomOf="@id/TextLayout"
         app:layout_constraintBottom_toTopOf="@id/ImageArrowLeft"
         app:layout_constraintRight_toLeftOf="@id/ImageViewer"
         app:layout_constraintLeft_toLeftOf="@id/layout"
@@ -130,71 +178,28 @@
         android:contentDescription="@string/image_recycle_bin"
         />
 
-    <ImageButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-
-        app:layout_constraintTop_toBottomOf="@id/ImageArrowLeft"
-        app:layout_constraintBottom_toTopOf="@id/FileSearchButton"
-        app:layout_constraintRight_toLeftOf="@id/ImageViewer"
-        app:layout_constraintLeft_toLeftOf="@id/layout"
-
-        android:id="@+id/cameraButton"
-
-        android:background="?android:selectableItemBackground"
-        android:src="@drawable/camera"
-        android:contentDescription="@string/camera_button"
-        />
-
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
 
             app:layout_constraintTop_toBottomOf="@id/ImageViewer"
-            app:layout_constraintBottom_toTopOf="@id/Send"
+            app:layout_constraintBottom_toTopOf="@id/SendButton"
             app:layout_constraintRight_toRightOf="@id/layout"
             app:layout_constraintLeft_toLeftOf="@id/layout"
 
             android:id="@+id/FileSearchButton"
             />
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:id="@+id/Send"
-
-        app:layout_constraintBottom_toBottomOf="@id/layout"
-        app:layout_constraintRight_toRightOf="@id/layout"
-        app:layout_constraintLeft_toLeftOf="@id/layout"
-        >
-
-        <Button
+    <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
 
-            app:layout_constraintTop_toTopOf="@+id/Send"
-            app:layout_constraintBottom_toBottomOf="@id/Send"
-            app:layout_constraintRight_toLeftOf="@id/SendWithoutTest"
-            app:layout_constraintLeft_toLeftOf="@id/Send"
+            app:layout_constraintBottom_toBottomOf="@id/layout"
+            app:layout_constraintRight_toRightOf="@id/layout"
+            app:layout_constraintLeft_toLeftOf="@id/layout"
 
             android:id="@+id/SendButton"
             android:layout_marginBottom="15dp"
             />
-
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-
-            app:layout_constraintTop_toTopOf="@+id/Send"
-            app:layout_constraintBottom_toBottomOf="@id/Send"
-            app:layout_constraintRight_toRightOf="@id/Send"
-            app:layout_constraintLeft_toRightOf="@id/SendButton"
-
-            android:id="@+id/SendWithoutTest"
-            android:layout_marginBottom="15dp"
-            />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

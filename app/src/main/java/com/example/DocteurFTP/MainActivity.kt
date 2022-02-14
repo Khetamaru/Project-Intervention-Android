@@ -1,4 +1,4 @@
-package com.example.project_intervention_android
+package com.example.DocteurFTP
 
 import android.app.Activity
 import android.app.AlertDialog
@@ -12,14 +12,14 @@ import android.widget.*
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.get
+import androidx.core.view.size
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
-import objects.AsyncFactory
-import objects.POJOFactory
-import objects.RequestFactory
-import objects.ToSendFile
+import objects.*
 import popUps.MessagePopUp
+
 
 class MainActivity : AppCompatActivity(), LoadingImplementation {
 
@@ -27,10 +27,11 @@ class MainActivity : AppCompatActivity(), LoadingImplementation {
     private var pictureSearchActivityResult : ActivityResultLauncher<Intent>? = null
     private var toSendFile : ToSendFile? = null
 
+    private var configMenuButton : Button? = null
     private var fileSearchButton : Button? = null
     private var sendButton : Button? = null
     private var interNameText : EditText? = null
-    private var userFolderText : EditText? = null
+    private var userFolderText : Spinner? = null
     private var imageViewer : ImageView? = null
     private var imageNumber : TextView? = null
     private var imageCross : ImageButton? = null
@@ -48,7 +49,7 @@ class MainActivity : AppCompatActivity(), LoadingImplementation {
     private val ioScope by lazy { CoroutineScope(job + Dispatchers.IO) }
 
     override fun onFinishedLoading() {
-        //# After loading is done, stop the animation and reset the current view
+
         loadingAnimation!!.stopAnimation(R.layout.activity_main)
         setUp()
     }
@@ -63,14 +64,13 @@ class MainActivity : AppCompatActivity(), LoadingImplementation {
             if (it.resultCode == Activity.RESULT_OK) {
 
                 val data = it.data
-                data!!.data?.let { it ->
-                    contentResolver.openOutputStream(it).use {
-
-                            stream -> stream!!.writer().write("Example Text")
+                data!!.data?.let { _it ->
+                    contentResolver.openOutputStream(_it).use {
+                        stream -> stream!!.writer().write("Example Text")
                     }
                 }
 
-                if (data!!.data != null) {
+                if (data.data != null) {
 
                     val uri = data.data!!
                     if (!redundancyCheck(uri)) {
@@ -109,12 +109,13 @@ class MainActivity : AppCompatActivity(), LoadingImplementation {
         }
     }
 
-    fun setUp() {
+    private fun setUp() {
 
         // Link Layout
         setContentView(R.layout.activity_main)
 
         // Link Layout's variables
+        configMenuButton = findViewById(R.id.configMenuButton)
         fileSearchButton = findViewById(R.id.FileSearchButton)
         sendButton = findViewById(R.id.SendButton)
         interNameText = findViewById(R.id.InterventionName)
@@ -127,26 +128,39 @@ class MainActivity : AppCompatActivity(), LoadingImplementation {
         imageRecycleBin = findViewById(R.id.ImageRecycleBin)
 
         // Other Variable
-        toSendFile = ToSendFile(
-            intent.getStringExtra("userId").toString(),
-            intent.getStringExtra("userPassword").toString()
-        )
-        pojoFactory = POJOFactory(cacheDir.absolutePath + "/userInfo.json")
+        pojoFactory = POJOFactory(cacheDir.absolutePath)
         loadingAnimation = LoadingAnimation(this, "loadingAnimation.json")
         loadingAsync = LoadingAsync(this)
+
+        val user = pojoFactory!!.readJSONFromFile()
+        toSendFile = ToSendFile(user)
 
         // Change Layout
         fileSearchButton!!.text = getString(R.string.fileSearchButtonText)
         sendButton!!.text = getString(R.string.sendButton)
 
-        if (pojoFactory!!.doesJSONExist()) userFolderText!!.setText(pojoFactory!!.readJSONFromFile())
+        val spinnerAdapter: ArrayAdapter<String> = ArrayAdapter<String>(
+            this,
+            android.R.layout.simple_spinner_item,
+            toSendFile!!.user.shortcutList!!
+        )
+        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        userFolderText!!.adapter = spinnerAdapter
+
+        if (toSendFile!!.user.shortcutList!!.size == 0) userFolderText!!.adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, arrayOf(getString(R.string.noSpinnerItem)))
 
         val params: ViewGroup.LayoutParams = imageViewer!!.layoutParams as ViewGroup.LayoutParams
         params.width = 600
         params.height = 1200
         imageViewer!!.layoutParams = params
 
-        // On Click Listeners
+        configMenuButton!!.setOnClickListener {
+
+            reloadActivity()
+            val intent = Intent(this@MainActivity, ConfigActivity::class.java)
+            startActivity(intent)
+        }
+
         fileSearchButton!!.setOnClickListener {
 
             // File Explorer Opening
@@ -162,7 +176,7 @@ class MainActivity : AppCompatActivity(), LoadingImplementation {
             if (error == null) {
                 // Files Sending
                 toSendFile!!.interName = interNameText!!.text.toString()
-                toSendFile!!.userFolder = userFolderText!!.text.toString()
+                toSendFile!!.userFolder = userFolderText!!.selectedItem.toString()
 
                 loadingAnimation!!.playAnimation(true)
                 loadingAsync!!.execute()
@@ -324,11 +338,18 @@ class MainActivity : AppCompatActivity(), LoadingImplementation {
 
     private fun errorCheck() : String? {
 
-        if (userFolderText!!.text.toString() == String()) return errorMessage(getString(R.string.noUserFolderError)) else pojoFactory!!.writeJSONToFile(userFolderText!!.text.toString())
+        if (userFolderText!!.selectedItem.toString() == String() || userFolderText!!.selectedItem.toString() == getString(R.string.noSpinnerItem)) {
+
+            return errorMessage(getString(R.string.noUserFolderError))
+        } else {
+
+            toSendFile!!.user.userFolder = userFolderText!!.selectedItem.toString()
+            pojoFactory!!.writeJSONToFile(toSendFile!!.user)
+        }
 
         if (interNameText!!.text.toString() == String())  return errorMessage(getString(R.string.noInterNameError))
 
-        if (userFolderText!!.text[0] == '/' || userFolderText!!.text[userFolderText!!.text.length - 1] == '/' || interNameText!!.text[0] == '/' || interNameText!!.text[interNameText!!.text.length - 1] == '/') return errorMessage(getString(R.string.errorSlash))
+        if (userFolderText!!.selectedItem.toString()[0] == '/' || userFolderText!!.selectedItem.toString()[userFolderText!!.selectedItem.toString().length - 1] == '/' || interNameText!!.text[0] == '/' || interNameText!!.text[interNameText!!.text.length - 1] == '/') return errorMessage(getString(R.string.errorSlash))
 
         if (toSendFile!!.filePaths.size == 0) return errorMessage(getString(R.string.noImageError))
 
@@ -437,5 +458,13 @@ class MainActivity : AppCompatActivity(), LoadingImplementation {
 
             else -> return getString(R.string.n901)
         }
+    }
+
+    fun reloadActivity() {
+
+        finish()
+        overridePendingTransition(0, 0)
+        startActivity(intent)
+        overridePendingTransition(0, 0)
     }
 }

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:background="?android:selectableItemBackground"
+        android:src="@drawable/recycle_bin_mini"
+
+        android:id="@+id/deleteButton"
+        />
+
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:background="?android:selectableItemBackground"
+        android:src="@drawable/save_icon"
+
+        android:id="@+id/saveButton"
+        />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:padding="8dp"
+        android:background="@drawable/rectangle"
+
+        android:id="@+id/contentText">
+    </EditText>
+</LinearLayout>

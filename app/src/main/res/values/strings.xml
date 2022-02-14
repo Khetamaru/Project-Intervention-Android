@@ -65,7 +65,7 @@
     <string name="n901">\nDetails : (901) -> Programmeur Stupide.</string>
 
 
-    <string name="app_name">Project-Intervention-Android</string>
+    <string name="app_name">Docteur FTP</string>
     <string name="fileSearchButtonText">Selectionner un fichier</string>
     <string name="InterventionName">Nom de l\'intervention</string>
     <string name="sendButton">Envoyer</string>
@@ -93,4 +93,10 @@
     <string name="noServerFind">Serveur introuvable</string>
     <string name="gear">abcdefghijklmnopqrstuvwxyz</string>
     <string name="camera_button">Button to take a photo himself</string>
+    <string name="UserFolderName">Nom du dossier Tech</string>
+    <string name="noUserFolderError">T\'es camé Léon ! Si tu me donnes pas le nom de ton dossier tech, je le créer où le dossier d\'inter ? A la racine ?</string>
+    <string name="errorSlash">Elle est têtue la laitue ! On met pas de "/" en début et fin de ligne. (si tu sais pas pourquoi, demande à Jimo)</string>
+    <string name="newShortcutTextHint">Nouveau raccourdi de dossier</string>
+    <string name="filePathTextHint">chemin de dossier NAS</string>
+    <string name="noSpinnerItem">Aucun raccourci existant.</string>
 </resources>
